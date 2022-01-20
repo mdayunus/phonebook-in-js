@@ -1,5 +1,7 @@
-import react, { useState } from "react";
-import { phoneRecords } from "../model/phone_record";
+import react, { useState, useEffect } from "react";
+// import { phoneRecords } from "../model/phone_record";
+import axios from "axios";
+import { render } from "@testing-library/react";
 
 const PhoneRecord = (props) => {
     return (
@@ -9,8 +11,20 @@ const PhoneRecord = (props) => {
 
 export const PhoneRecords = () => {
 
-    const [records, setRecords] = useState(phoneRecords)
+    const [records, setRecords] = useState([])
     const [newRecord, setNewRecord] = useState({ name: 'enter name here...', number: 'enter number here...' })
+
+    useEffect(() => {
+        console.log('effect')
+        axios
+        .get('http://localhost:3001/phonebook')
+        .then(response => {
+            console.log('promise fulfilled')
+            setRecords(response.data)
+        })
+    }, [])
+
+    console.log('render', records.length, 'phone numbers')
 
     const handleRecordSubmit = (event) => {
         event.preventDefault()
